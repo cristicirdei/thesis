@@ -1,57 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+//import { Counter } from "./features/counter/Counter";
+
+// styles
+import "./styles/Layout.scss";
+import "./styles/App.scss";
+
+// components
+import Menu from "./components/molecules/Menu";
+import Header from "./components/molecules/Header";
+import LandingPage from "./pages/LandingPage";
+import Activities from "./pages/Activities";
+import Competencies from "./pages/Competencies";
+import Guide from "./pages/Guide";
+import Organization from "./pages/Organisation";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Header />
+        <Menu />
+        <div className="col-10">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/guide" element={<Guide />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/competencies" element={<Competencies />} />
+            <Route path="/organization" element={<Organization />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+      {/*<BrowserRouter>
+        <div className="col-12">
+          <Routes>
+            <Route path="/auth" element={<></>} />
+            <Route path="/auth/join" element={<></>} />
+            <Route path="/" element={<LandingPage />} />
+          </Routes>
+        </div>
+      </BrowserRouter>*/}
+    </>
   );
 }
 
