@@ -8,8 +8,10 @@ const Guide = () => {
     <div className="page">
       <h1>Guide</h1>
       <div className="guide-container">
-        <Link
-          to={"/guide"}
+        <a
+          href="https://scrumguides.org/scrum-guide.html#product-owner"
+          target="_blank"
+          rel="noreferrer"
           className="guide-tile"
           style={{ color: "inherit", textDecoration: "none" }}
         >
@@ -22,10 +24,12 @@ const Guide = () => {
             </h1>
             <p>About Product Ownership and what it means.</p>
           </div>
-        </Link>
+        </a>
 
-        <Link
-          to={"/guide"}
+        <a
+          href="https://practicelibrary.ivarjacobson.com/sites/default/files/embedded-practices/Product_Ownership_Essentials_HTML_guidelines"
+          target="_blank"
+          rel="noreferrer"
           className="guide-tile"
           style={{ color: "inherit", textDecoration: "none" }}
         >
@@ -41,7 +45,7 @@ const Guide = () => {
               the language.
             </p>
           </div>
-        </Link>
+        </a>
 
         <Link
           to={"/guide"}

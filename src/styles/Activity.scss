@@ -87,6 +87,7 @@ hr {
 
 .activity-card:hover {
     box-shadow: 0px 1px 10px 1px $shadowColor2;
+    cursor: pointer;
 }
 
 .activity-plan {
@@ -111,6 +112,7 @@ hr {
 
 .activity-plan:hover {
     box-shadow: 0px 1px 10px 1px $shadowColor2;
+    cursor: pointer;
 }
 
 .activity-status {
@@ -146,9 +148,8 @@ hr {
 
         .status-bar-completed {
             height: 0.5rem;
-            margin-top: -1px;
+            margin-top: -0.5px;
             border-radius: 5px;
-            border: 1px solid #5DFB7C;
             background-color: #5DFB7C;
         }
 

@@ -10,7 +10,7 @@ const TeamMemberCompetency = ({ name, level, area, levelName }) => {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
       <div className="details">
-        <img className="img-user" src={userIcon} alt="activity"></img>
+        <img className="img-user" src={userIcon} alt="user"></img>
         <p>{name}</p>
       </div>
 

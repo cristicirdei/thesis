@@ -1,8 +1,8 @@
 import React from "react";
 
-const ActivityPlan = ({ name, startDate, endDate }) => {
+const ActivityPlan = ({ name, startDate, endDate, onClick }) => {
   return (
-    <div className="activity-plan">
+    <div className="activity-plan" onClick={onClick}>
       <h4>{name}</h4>
       <div>
         <p>

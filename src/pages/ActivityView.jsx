@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import Modal from "react-modal";
 
 import Task from "../components/molecules/Task";
 import Document from "../components/molecules/Document";
@@ -12,6 +13,11 @@ import activityIcon from "../resources/activity.png";
 import activitySpaceIcon from "../resources/activity_space.png";
 import alphaIcon from "../resources/alpha.png";
 import workProductIcon from "../resources/work_product_customer.png";
+
+import { customStyles_1, customStyles_2 } from "../utils/modalStyleConstants";
+
+// Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
+Modal.setAppElement(document.getElementById("root"));
 
 const ActivityView = () => {
   const { id } = useParams();
@@ -34,8 +40,227 @@ const ActivityView = () => {
   }, []);
   /* ----------------------*/
 
+  const [modalState, setModalState] = useState({
+    viewNote: false,
+    viewTask: false,
+    addNote: false,
+    addTask: false,
+  });
+
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  let customStyles;
+  modalState.viewTask === true || modalState.addTask === true
+    ? (customStyles = structuredClone(customStyles_1))
+    : (customStyles = structuredClone(customStyles_2));
+
+  const notes = [
+    { id: 1, title: "Title note #1", body: "body of note" },
+    { id: 2, title: "Title note #2", body: "body of note two" },
+  ];
+  const tasks = [
+    {
+      id: 1,
+      title: "Title task #1",
+      body: "body of task",
+      deadline: "23.04.2023",
+    },
+    {
+      id: 2,
+      title: "Title task #2",
+      body: "body of task two",
+      deadline: "13.04.2023",
+    },
+  ];
+
+  const active = (activity, alpha, state) => {
+    if (
+      activity === "0" &&
+      ["Opportunity", "Product Vision"].includes(alpha) &&
+      [
+        "Identified",
+        "Solution Needed",
+        "Value Established",
+        "Need Identified",
+        "Solution Envisaged",
+        "Value Release Strategy Outlined",
+      ].includes(state)
+    ) {
+      return true;
+    }
+
+    if (
+      activity === "1" &&
+      ["Stakeholders", "Stakeholder Network"].includes(alpha) &&
+      [
+        "Recognized",
+        "Represented",
+        "Involved",
+        "Stakeholder Types Described",
+        "Representatives Named",
+        "Communication Plans Outlined",
+      ].includes(state)
+    ) {
+      return true;
+    }
+
+    if (
+      activity === "2" &&
+      ["Stakeholders", "Opportunity"].includes(alpha) &&
+      [
+        "Recognized",
+        "Represented",
+        "Involved",
+        "In Agreement",
+        "Identified",
+        "Solution Needed",
+        "Value Established",
+        "Viable",
+      ].includes(state)
+    ) {
+      return true;
+    }
+
+    if (
+      activity === "3" &&
+      ["Stakeholders", "Opportunity"].includes(alpha) &&
+      [
+        "Recognized",
+        "Represented",
+        "Involved",
+        "In Agreement",
+        "Satisfied for Deployment",
+        "Identified",
+        "Solution Needed",
+        "Value Established",
+        "Viable",
+        "Addressed",
+      ].includes(state)
+    ) {
+      return true;
+    }
+  };
+
   return (
     <div className="page-split">
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button className="close" onClick={closeModal}>
+          X
+        </button>
+        {modalState.viewNote && (
+          <>
+            <h2>{notes[0].title}</h2>
+            <p className="modal-body">{notes[0].body}</p>
+          </>
+        )}
+
+        {modalState.viewTask && (
+          <>
+            <h2>{tasks[0].title}</h2>
+            <h5>Deadline: {tasks[0].deadline}</h5>
+            <p className="modal-body"> {tasks[0].body}</p>
+            <label
+              className="main"
+              style={{
+                float: "right",
+                marginTop: "2rem",
+                marginBottom: "0",
+              }}
+            >
+              Done
+              <input type="checkbox"></input>
+              <span className="geekmark-2"></span>
+            </label>
+          </>
+        )}
+
+        {modalState.addNote && (
+          <form>
+            <h3>Add Note</h3>
+            <br></br>
+            <input
+              type="text"
+              name="Title"
+              placeholder="Title"
+              className="input-modal"
+              onChange
+            ></input>
+            <br></br>
+            <textarea
+              rows="7"
+              cols="50"
+              name="Note body"
+              placeholder="Body"
+              className="input-modal"
+              onChange
+            ></textarea>
+            <br></br>
+            <br></br>
+            <h3>Or Add a Document</h3>
+            <br></br>
+            <input
+              type="file"
+              name="Document"
+              className="input-modal"
+              accept=".pdf"
+              onChange
+            ></input>
+
+            <br></br>
+            <input type="submit" className="save" value="Save"></input>
+          </form>
+        )}
+
+        {modalState.addTask && (
+          <form>
+            <input
+              type="text"
+              name="Title"
+              placeholder="Task title"
+              className="input-modal"
+              onChange
+            ></input>
+            <p style={{ fontSize: "small", color: "gray" }}>Deadline</p>
+            <input
+              type="date"
+              name="Deadline"
+              placeholder="Deadline"
+              className="input-modal"
+              style={{ width: "fit-content" }}
+              onChange
+            ></input>
+            <textarea
+              rows="7"
+              cols="50"
+              name="About task"
+              placeholder="Task details"
+              className="input-modal"
+              onChange
+            ></textarea>
+
+            <br></br>
+            <input type="submit" className="save" value="Save"></input>
+          </form>
+        )}
+      </Modal>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -109,15 +334,68 @@ const ActivityView = () => {
         <div className="subsection">
           <h3>Tasks</h3>
           <div className="resource-container">
-            <Task name="Task #1"></Task>
+            <Task
+              id={1}
+              name="Task #1"
+              onClick={() => {
+                openModal();
+                setModalState({
+                  viewNote: false,
+                  viewTask: true,
+                  addNote: false,
+                  addTask: false,
+                });
+              }}
+            ></Task>
+            <button
+              className="addButton-simple"
+              onClick={() => {
+                openModal();
+                setModalState({
+                  viewNote: false,
+                  viewTask: false,
+                  addNote: false,
+                  addTask: true,
+                });
+              }}
+            >
+              <span className="fa fa-plus-square"></span>
+            </button>
           </div>
         </div>
 
         <div className="subsection">
           <h3>Documents</h3>
           <div className="resource-container">
-            <Document name="note #1" type="note"></Document>
+            <Document
+              id={1}
+              name="note #1"
+              type="note"
+              onClick={() => {
+                openModal();
+                setModalState({
+                  viewNote: true,
+                  viewTask: false,
+                  addNote: false,
+                  addTask: false,
+                });
+              }}
+            ></Document>
             <Document name="doc.pdf" type="document"></Document>
+            <button
+              className="addButton-simple"
+              onClick={() => {
+                openModal();
+                setModalState({
+                  viewNote: false,
+                  viewTask: false,
+                  addNote: true,
+                  addTask: false,
+                });
+              }}
+            >
+              <span className="fa fa-plus-square"></span>
+            </button>
           </div>
         </div>
       </div>
@@ -140,14 +418,26 @@ const ActivityView = () => {
             </div>
 
             {objective.states.map((state) => (
-              <div className="state">
+              <div
+                className={
+                  active(id, objective.name, state.name)
+                    ? "state"
+                    : "state  disabled"
+                }
+              >
                 <h4>{state.name}</h4>
                 <div className="steps">
                   {state.conditions.map((con) => (
                     <label className="main">
-                      {con}
+                      {con.text}
                       <input type="checkbox"></input>
-                      <span className="geekmark"></span>
+                      <span
+                        className={
+                          active(id, objective.name, state.name)
+                            ? "geekmark"
+                            : "geekmark-disabled"
+                        }
+                      ></span>
                     </label>
                   ))}
                 </div>

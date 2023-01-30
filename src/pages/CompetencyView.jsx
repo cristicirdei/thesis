@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import Modal from "react-modal";
 
 import Document from "../components/molecules/Document";
 import TeamMemberCompetency from "../components/molecules/TeamMemberCompetency";
 
 import { competenciesConstants } from "../utils/competenciesConstants";
+import { customStyles_2 } from "../utils/modalStyleConstants";
 
 import competencyCustomerIcon from "../resources/competency_customer.png";
 import competencySolutionIcon from "../resources/competency_solution.png";
 import userIcon from "../resources/user-solid.svg";
+
+// Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
+Modal.setAppElement(document.getElementById("root"));
 
 const CompetencyView = () => {
   const { id } = useParams();
@@ -23,8 +28,88 @@ const CompetencyView = () => {
   }, []);
   /* ----------------------*/
 
+  const [modalState, setModalState] = useState({
+    viewNote: false,
+    addNote: false,
+  });
+
+  let customStyles = customStyles_2;
+
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const notes = [
+    { id: 1, title: "Title note #1", body: "body of note" },
+    { id: 2, title: "Title note #2", body: "body of note two" },
+  ];
+
   return (
     <div className="page-split">
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button className="close" onClick={closeModal}>
+          X
+        </button>
+        {modalState.viewNote && (
+          <>
+            <h2>{notes[0].title}</h2>
+            <p className="modal-body">{notes[0].body}</p>
+          </>
+        )}
+
+        {modalState.addNote && (
+          <form>
+            <h3>Add Note</h3>
+            <br></br>
+            <input
+              type="text"
+              name="Title"
+              placeholder="Title"
+              className="input-modal"
+              onChange
+            ></input>
+            <br></br>
+            <textarea
+              rows="7"
+              cols="50"
+              name="Note body"
+              placeholder="Body"
+              className="input-modal"
+              onChange
+            ></textarea>
+            <br></br>
+            <br></br>
+            <h3>Or Add a Document</h3>
+            <br></br>
+            <input
+              type="file"
+              name="Document"
+              className="input-modal"
+              accept=".pdf"
+              onChange
+            ></input>
+
+            <br></br>
+            <input type="submit" className="save" value="Save"></input>
+          </form>
+        )}
+      </Modal>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -76,7 +161,29 @@ const CompetencyView = () => {
         <div className="subsection">
           <h3>Documents</h3>
           <div className="resource-container">
-            <Document name="note #1" type="note"></Document>
+            <Document
+              name="note #1"
+              type="note"
+              onClick={() => {
+                openModal();
+                setModalState({
+                  viewNote: true,
+                  addNote: false,
+                });
+              }}
+            ></Document>
+            <button
+              className="addButton-simple"
+              onClick={() => {
+                openModal();
+                setModalState({
+                  viewNote: false,
+                  addNote: true,
+                });
+              }}
+            >
+              <span className="fa fa-plus-square"></span>
+            </button>
           </div>
         </div>
       </div>
@@ -96,7 +203,7 @@ const CompetencyView = () => {
               <div className="steps">
                 {level.conditions.map((con) => (
                   <label className="main">
-                    {con}
+                    {con.text}
                     <input type="checkbox"></input>
                     <span className="geekmark"></span>
                   </label>

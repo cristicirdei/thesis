@@ -12,6 +12,7 @@ import "./styles/Organization.scss";
 import "./styles/ActivityView.scss";
 import "./styles/Resources.scss";
 import "./styles/Check.scss";
+import "./styles/SetUp.scss";
 
 // components
 import Menu from "./components/molecules/Menu";
@@ -23,6 +24,7 @@ import Guide from "./pages/Guide";
 import Organization from "./pages/Organization";
 import ActivityView from "./pages/ActivityView";
 import CompetencyView from "./pages/CompetencyView";
+import SetUpProject from "./pages/SetUpProject";
 
 function App() {
   return (
@@ -32,13 +34,20 @@ function App() {
         <Menu />
         <div className="col-10">
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<LandingPage />} />
             <Route path="/guide" element={<Guide />} />
+
             <Route path="/activities" element={<Activities />} />
             <Route path="/activity/:id" element={<ActivityView />} />
             <Route path="/competencies" element={<Competencies />} />
             <Route path="/competency/:id" element={<CompetencyView />} />
             <Route path="/organization" element={<Organization />} />
+          </Routes>
+        </div>
+        <div className="col-12">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/project" element={<SetUpProject />} />
           </Routes>
         </div>
       </BrowserRouter>
