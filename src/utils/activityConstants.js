@@ -1,5 +1,6 @@
 export const activitiesConstants = [
   {
+    id: 0,
     name: "Evolve the Product Vision",
     description:
       "Agree and communicate the goals and return-on-investment case for the product to drive and inform ongoing decisions about the product.",
@@ -22,6 +23,7 @@ export const activitiesConstants = [
     },
   },
   {
+    id: 1,
     name: "Build Stakeholder Network",
     description:
       "Actively engage all stakeholders with a legitimate and material interest in the endeavor, including eliciting feedback and negotiating compromises as required.",
@@ -43,6 +45,7 @@ export const activitiesConstants = [
     },
   },
   {
+    id: 2,
     name: "Demonstrate the Product",
     description:
       "Show the evolving product to stakeholders and elicit feedback as frequently as possible to converge on an optimal solution.",
@@ -63,6 +66,7 @@ export const activitiesConstants = [
     },
   },
   {
+    id: 3,
     name: "Achieve Acceptance",
     description:
       "The product is accepted for release. Progressively accepting the product enables frequent releases to be made to maximize return-on-investment.",

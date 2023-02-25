@@ -13,6 +13,7 @@ import "./styles/ActivityView.scss";
 import "./styles/Resources.scss";
 import "./styles/Check.scss";
 import "./styles/SetUp.scss";
+import "./styles/Auth.scss";
 
 // components
 import Menu from "./components/molecules/Menu";
@@ -25,6 +26,8 @@ import Organization from "./pages/Organization";
 import ActivityView from "./pages/ActivityView";
 import CompetencyView from "./pages/CompetencyView";
 import SetUpProject from "./pages/SetUpProject";
+import Login from "./pages/Login";
+import Join from "./pages/Join";
 
 function App() {
   return (
@@ -48,18 +51,20 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/project" element={<SetUpProject />} />
+            <Route path="/login" element={<Login></Login>} />
+            <Route path="/join" element={<Join />} />
           </Routes>
         </div>
       </BrowserRouter>
       {/*<BrowserRouter>
         <div className="col-12">
           <Routes>
-            <Route path="/auth" element={<></>} />
+            <Route path="/login" element={<Login></Login>} />
             <Route path="/auth/join" element={<></>} />
             <Route path="/" element={<LandingPage />} />
           </Routes>
         </div>
-      </BrowserRouter>*/}
+  </BrowserRouter>*/}
     </>
   );
 }

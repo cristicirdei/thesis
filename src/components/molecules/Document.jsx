@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Document = ({ name, content, link, type, onClick }) => {
+const Document = ({ name, link, type, onClick }) => {
   return (
     <Link
       to={link}

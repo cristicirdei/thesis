@@ -9,6 +9,9 @@ import { activitiesConstants } from "../utils/activityConstants";
 import { activitiesTestData } from "../utils/fakeData";
 import { customStyles_0 } from "../utils/modalStyleConstants";
 
+import { BACKEND_URL } from "../utils/constants";
+import axios from "axios";
+
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement(document.getElementById("root"));
 
@@ -28,6 +31,26 @@ const Activities = () => {
   }
 
   let customStyles = customStyles_0;
+  const [openedActivity, setOpenedActivity] = useState({
+    id: null,
+    startDate: null,
+    endDate: null,
+  });
+
+  const handlePlanActivity = async (e) => {
+    const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+    alert("at least i am here");
+    try {
+      const res = await axios.post(`${BACKEND_URL}/activity/plan/${id_p}`, {
+        id: openedActivity.id,
+        startDate: openedActivity.startDate,
+        endDate: openedActivity.endDate,
+      });
+      console.log("res ", res);
+    } catch (e) {
+      alert(e);
+    }
+  };
 
   return (
     <div className="page">
@@ -42,7 +65,7 @@ const Activities = () => {
           X
         </button>
 
-        <form>
+        <form onSubmit={(e) => handlePlanActivity(e)}>
           <h3>Plan Activity</h3>
           <br></br>
           <p style={{ fontSize: "small", color: "gray" }}>Starting date</p>
@@ -50,7 +73,12 @@ const Activities = () => {
             type="date"
             className="input-modal"
             style={{ width: "fit-content" }}
-            onChange
+            onChange={(e) =>
+              setOpenedActivity((previousState) => ({
+                ...previousState,
+                startDate: e.target.value,
+              }))
+            }
           ></input>
           <br></br>
           <p style={{ fontSize: "small", color: "gray" }}>Ending date</p>
@@ -58,7 +86,12 @@ const Activities = () => {
             type="date"
             className="input-modal"
             style={{ width: "fit-content" }}
-            onChange
+            onChange={(e) =>
+              setOpenedActivity((previousState) => ({
+                ...previousState,
+                endDate: e.target.value,
+              }))
+            }
           ></input>
 
           <br></br>
@@ -89,7 +122,13 @@ const Activities = () => {
               name={activity.name}
               startDate={activitiesTestData[i].startDate}
               endDate={activitiesTestData[i].endDate}
-              onClick={openModal}
+              onClick={(e) => {
+                openModal();
+                setOpenedActivity((previousState) => ({
+                  ...previousState,
+                  id: activity.id,
+                }));
+              }}
             ></ActivityPlan>
           ))}
       </div>

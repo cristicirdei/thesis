@@ -1,0 +1,95 @@
+@import "Master";
+
+.auth-form {
+    grid-area: form;
+    display: grid;
+    grid-template-columns: 25vW;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "details";
+    margin: auto;
+    align-self: center;
+
+    div {
+        grid-area: details;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    .details-zone {
+        @include bordered;
+        grid-area: details;
+
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+
+    input {
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0px 1px 5px 1px $shadowColor2;
+        width: 15rem;
+        padding: 0.5rem;
+        margin: 0.2rem 0 1rem 0;
+    }
+
+    input[type="submit"] {
+        width: 15rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        margin: 1rem 0;
+        background-color: $themeColor;
+        color: white;
+    }
+
+    label {
+        margin: 0.2rem 0;
+    }
+
+    h2 {
+        margin-bottom: 2rem;
+        color: $themeColor;
+    }
+
+
+}
+
+.navlinks {
+    border-radius: 10px;
+
+    margin-right: 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    float: right;
+    background-color: #000;
+    color: #fff;
+}
+
+.navlinks a {
+    border-radius: 10px;
+
+    text-decoration: none;
+    color: #fff;
+    font-weight: 400;
+    padding: 0.5rem 0.5rem;
+}
+
+.navlinks a:hover {
+    border-radius: 10px;
+
+    background-color: #fff;
+    cursor: pointer;
+    color: #000;
+    transition: 0.3s all;
+}

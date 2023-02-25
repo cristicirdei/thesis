@@ -2,9 +2,9 @@ import React from "react";
 
 import userIcon from "../../resources/user-solid.svg";
 
-const TeamMemberCompetency = ({ name, level, area, levelName }) => {
+const TeamMemberCompetency = ({ name, level, area, levelName, onClick }) => {
   return (
-    <div className="member-card-com">
+    <div className="member-card-com" onClick={onClick}>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -16,7 +16,7 @@ const TeamMemberCompetency = ({ name, level, area, levelName }) => {
 
       <div className="competency-level">
         <p className={area}>
-          {level} <span class="fa fa-star"></span>
+          {level} <span className="fa fa-star"></span>
         </p>
         <p>{levelName}</p>
       </div>

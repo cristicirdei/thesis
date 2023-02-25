@@ -12,6 +12,9 @@ import competencyCustomerIcon from "../resources/competency_customer.png";
 import competencySolutionIcon from "../resources/competency_solution.png";
 import userIcon from "../resources/user-solid.svg";
 
+import { BACKEND_URL } from "../utils/constants";
+import axios from "axios";
+
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement(document.getElementById("root"));
 
@@ -22,10 +25,6 @@ const CompetencyView = () => {
   /* set height of section-2*/
   const [height, setHeight] = useState(0);
   const ref = useRef(null);
-
-  useEffect(() => {
-    setHeight(ref.current.clientHeight);
-  }, []);
   /* ----------------------*/
 
   const [modalState, setModalState] = useState({
@@ -49,10 +48,109 @@ const CompetencyView = () => {
     setIsOpen(false);
   }
 
-  const notes = [
-    { id: 1, title: "Title note #1", body: "body of note" },
-    { id: 2, title: "Title note #2", body: "body of note two" },
-  ];
+  const getConditionStatus = (person_id, id) => {
+    const person = data?.competency.people.find((el) => el._id === person_id);
+    const condition = person?.checkpoints.find((el) => el.c_id === id);
+    console.log("-- ", person_id, id, condition?.status);
+    return condition?.status;
+  };
+
+  const getLevelStatus = (person_id, level_name) => {
+    const person = data?.levels.find((el) => el.person._id === person_id);
+    const level = person?.level.level;
+
+    let response = false;
+    if (level_name === "Assists" && level >= 1) {
+      response = true;
+    }
+    if (level_name === "Applies" && level >= 2) {
+      response = true;
+    }
+    if (level_name === "Masters" && level >= 3) {
+      response = true;
+    }
+    if (level_name === "Adapts" && level >= 4) {
+      response = true;
+    }
+    if (level_name === "Innovates" && level >= 5) {
+      response = true;
+    }
+    return response;
+  };
+
+  const [note, setNote] = useState({ title: null, body: null });
+  const [openedNote, setOpenedNote] = useState();
+  const [selectedPerson, setSelectedPerson] = useState();
+  const [data, setData] = useState();
+
+  const handleChange = async (e) => {
+    // e.target.checked = true;
+
+    const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+    const change = e.target.value;
+
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/competency/${id_p}/${id}/${selectedPerson.user._id}`,
+        {
+          condition: change,
+        }
+      );
+      // window.location.reload(true);
+      console.log("res ", res);
+      setData(res.data);
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  const handleAddNote = async (e) => {
+    const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/competency/note/${id_p}/${id}`,
+        {
+          title: note.title,
+          body: note.body,
+        }
+      );
+      console.log("res ", res);
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  useEffect(() => {
+    setHeight(ref.current.clientHeight);
+  }, []);
+
+  useEffect(() => {
+    const fetchCompetencyData = async () => {
+      const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/competency/${id_p}/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: localStorage.getItem("token"),
+            },
+            withCredentials: true,
+          }
+        );
+        const json = await response.json();
+        console.log(json);
+        setData(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchCompetencyData();
+  }, [id]);
+
+  useEffect(() => {}, [data, selectedPerson]);
 
   return (
     <div className="page-split">
@@ -68,13 +166,13 @@ const CompetencyView = () => {
         </button>
         {modalState.viewNote && (
           <>
-            <h2>{notes[0].title}</h2>
-            <p className="modal-body">{notes[0].body}</p>
+            <h2>{openedNote.title}</h2>
+            <p className="modal-body">{openedNote.body}</p>
           </>
         )}
 
         {modalState.addNote && (
-          <form>
+          <form onSubmit={(e) => handleAddNote(e)}>
             <h3>Add Note</h3>
             <br></br>
             <input
@@ -82,7 +180,12 @@ const CompetencyView = () => {
               name="Title"
               placeholder="Title"
               className="input-modal"
-              onChange
+              onChange={(e) =>
+                setNote((previousState) => ({
+                  ...previousState,
+                  title: e.target.value,
+                }))
+              }
             ></input>
             <br></br>
             <textarea
@@ -91,7 +194,12 @@ const CompetencyView = () => {
               name="Note body"
               placeholder="Body"
               className="input-modal"
-              onChange
+              onChange={(e) =>
+                setNote((previousState) => ({
+                  ...previousState,
+                  body: e.target.value,
+                }))
+              }
             ></textarea>
             <br></br>
             <br></br>
@@ -134,8 +242,8 @@ const CompetencyView = () => {
           <h3>Explanation</h3>
           <p>{competency.explanation.intro}</p>
           <ul>
-            {competency.explanation.list.map((item) => (
-              <li>{item}</li>
+            {competency.explanation.list.map((item, index) => (
+              <li key={index}>{item}</li>
             ))}
           </ul>
           <p>{competency.explanation.outro}</p>
@@ -143,35 +251,50 @@ const CompetencyView = () => {
 
         <div className="subsection">
           <h3>Skills</h3>
-          {competency.skills.map((item) => (
-            <p>{item}</p>
+          {competency.skills.map((item, index) => (
+            <p key={index}>{item}</p>
           ))}
         </div>
 
         <div className="subsection">
           <h3>Team</h3>
-          <TeamMemberCompetency
-            name="Person #1"
-            levelName="Masters"
-            level={3}
-            area={competency.area === "customer" ? "green" : "yellow"}
-          ></TeamMemberCompetency>
+          <div className="team">
+            {data?.levels.map((person) => (
+              <TeamMemberCompetency
+                name={person.person.name}
+                levelName={person.level.name}
+                level={person.level.level}
+                area={competency.area === "customer" ? "green" : "yellow"}
+                onClick={(e) => {
+                  setSelectedPerson(
+                    data?.competency.people.find(
+                      (el) => el.user._id === person.person._id
+                    )
+                  );
+                  console.log(selectedPerson);
+                }}
+              ></TeamMemberCompetency>
+            ))}
+          </div>
         </div>
 
         <div className="subsection">
           <h3>Documents</h3>
           <div className="resource-container">
-            <Document
-              name="note #1"
-              type="note"
-              onClick={() => {
-                openModal();
-                setModalState({
-                  viewNote: true,
-                  addNote: false,
-                });
-              }}
-            ></Document>
+            {data?.competency.notes.map((note, index) => (
+              <Document
+                name={note.title}
+                type={note.body}
+                onClick={() => {
+                  setOpenedNote(note);
+                  openModal();
+                  setModalState({
+                    viewNote: true,
+                    addNote: false,
+                  });
+                }}
+              ></Document>
+            ))}
             <button
               className="addButton-simple"
               onClick={() => {
@@ -192,25 +315,58 @@ const CompetencyView = () => {
           <div className="sec-title">
             <h3>Competency Levels of {competency.name}</h3>
           </div>
+
           <div className="sec-subtitle">
             <img className="img-user" src={userIcon} alt="activity"></img>
-            <p>Person #1</p>
+            <p>
+              {selectedPerson?.user.name ||
+                "Select a person from Team to see their competency levels "}
+            </p>
           </div>
 
-          {competency.levels.map((level) => (
-            <div className="state">
-              <h4>{level.name}</h4>
-              <div className="steps">
-                {level.conditions.map((con) => (
-                  <label className="main">
-                    {con.text}
-                    <input type="checkbox"></input>
-                    <span className="geekmark"></span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
+          {competency.levels.map(
+            (level) =>
+              selectedPerson && (
+                <div className="state">
+                  <h4>{level.name}</h4>
+                  <div className="steps">
+                    {level.conditions.map((con) => (
+                      <label className="main">
+                        {con.text}
+                        {getConditionStatus(selectedPerson?._id, con.id) ===
+                        "complete" ? (
+                          <input
+                            type="checkbox"
+                            value={con.id}
+                            checked={true}
+                            disabled
+                          ></input>
+                        ) : (
+                          <input
+                            type="checkbox"
+                            value={con.id}
+                            defaultChecked={false}
+                            onChange={(e) => handleChange(e)}
+                          ></input>
+                        )}
+
+                        <span className="geekmark"></span>
+                      </label>
+                    ))}
+
+                    {getLevelStatus(selectedPerson?.user._id, level.name) ? (
+                      <h3>
+                        <span>
+                          Level <b>{level.name}</b> Reached
+                        </span>
+                      </h3>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              )
+          )}
         </div>
       </div>
     </div>
