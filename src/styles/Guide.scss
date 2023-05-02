@@ -10,7 +10,7 @@
     margin: 2rem;
 
     .guide-tile {
-        @include bordered;
+        @include bordered-shadow;
         flex-grow: 1;
         height: 15rem;
         padding: 1rem;

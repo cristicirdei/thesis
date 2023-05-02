@@ -76,6 +76,14 @@ const ActivityView = () => {
   const [openedTask, setOpenedTask] = useState();
   const [data, setData] = useState();
   const [objectivesStatus, setObjectivesStatus] = useState();
+  const [o, setO] = useState();
+  const [s, setS] = useState();
+  const [v, setV] = useState();
+  const [n, setN] = useState();
+  const [c0, setC0] = useState([]);
+  const [c1, setC1] = useState([]);
+  const [c2, setC2] = useState([]);
+  const [c3, setC3] = useState([]);
 
   const handleAddNote = async (e) => {
     const id_p = JSON.parse(localStorage.getItem("user")).id._id;
@@ -141,6 +149,74 @@ const ActivityView = () => {
 
     fetchActivityData();
   }, [id]);
+
+  useEffect(() => {
+    const fetchObjectiveData = async (id) => {
+      const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+      try {
+        const response = await fetch(`${BACKEND_URL}/objective/${id_p}/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          withCredentials: true,
+        });
+        const json = await response.json();
+        console.log(json);
+        id === "o"
+          ? setO(json)
+          : id === "s"
+          ? setS(json)
+          : id === "v"
+          ? setV(json)
+          : setN(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchObjectiveData("s");
+    fetchObjectiveData("o");
+    fetchObjectiveData("v");
+    fetchObjectiveData("n");
+  }, []);
+
+  useEffect(() => {
+    const fetchCompetencyData = async (id) => {
+      const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/competency/${id_p}/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: localStorage.getItem("token"),
+            },
+            withCredentials: true,
+          }
+        );
+        const json = await response.json();
+        console.log(json);
+        id === 0
+          ? setC0(json)
+          : id === 1
+          ? setC1(json)
+          : id === 2
+          ? setC2(json)
+          : setC3(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchCompetencyData(0);
+    fetchCompetencyData(1);
+    fetchCompetencyData(2);
+    fetchCompetencyData(3);
+  }, []);
 
   const handleTaskComplete = async (e) => {
     // e.target.checked = true;
@@ -249,27 +325,186 @@ const ActivityView = () => {
     return condition?.status;
   };
 
-  const getLevelStatus = (level_name) => {
-    /*const person = data?.levels.find((el) => el.person._id === person_id);
-    const level = person?.level.level;
+  const getLevelStatus = (objective, level) => {
+    let levels;
+    if (objective === "s") {
+      levels = s?.levels;
+    }
+    if (objective === "o") {
+      levels = o?.levels;
+    }
+    if (objective === "v") {
+      levels = v?.levels;
+    }
+    if (objective === "n") {
+      levels = n?.levels;
+    }
 
-    let response = false;
-    if (level_name === "Assists" && level >= 1) {
-      response = true;
+    let resp;
+    if (levels) {
+      resp = levels[level]?.status;
     }
-    if (level_name === "Applies" && level >= 2) {
-      response = true;
+
+    return resp;
+  };
+
+  const checkEntry = (activity) => {
+    const complete = <p style={{ color: "green" }}>Complete</p>;
+    const incomplete = <p style={{ color: "orange" }}>Incomplete</p>;
+
+    if (activity === "2") {
+      if (
+        s?.levels[2].status === "complete" &&
+        o?.levels[2].status === "complete"
+      ) {
+        return complete;
+      } else {
+        return incomplete;
+      }
     }
-    if (level_name === "Masters" && level >= 3) {
-      response = true;
+
+    if (activity === "3") {
+      if (
+        s?.levels[3].status === "complete" &&
+        o?.levels[3].status === "complete"
+      ) {
+        return complete;
+      } else {
+        return incomplete;
+      }
     }
-    if (level_name === "Adapts" && level >= 4) {
-      response = true;
+
+    return complete;
+  };
+
+  const checkExit = (activity) => {
+    const complete = <p style={{ color: "green" }}>Complete</p>;
+    const progressing = <p style={{ color: "lightblue" }}>Progressing</p>;
+    const planned = <p style={{ color: "gray" }}>Planned</p>;
+
+    if (activity === "0") {
+      if (
+        o?.levels[2].status === "complete" &&
+        v?.levels[2].status === "complete"
+      ) {
+        return complete;
+      } else {
+        return progressing;
+      }
     }
-    if (level_name === "Innovates" && level >= 5) {
-      response = true;
+
+    if (activity === "1") {
+      if (
+        o?.levels[2].status !== "complete" ||
+        v?.levels[2].status !== "complete"
+      ) {
+        return planned;
+      }
+      if (
+        s?.levels[2].status === "complete" &&
+        n?.levels[2].status === "complete"
+      ) {
+        return complete;
+      } else {
+        return progressing;
+      }
     }
-    return response;*/
+
+    if (activity === "2") {
+      if (
+        s?.levels[2].status !== "complete" ||
+        n?.levels[2].status !== "complete"
+      ) {
+        return planned;
+      }
+      if (
+        s?.levels[3].status === "complete" &&
+        o?.levels[3].status === "complete"
+      ) {
+        return complete;
+      } else {
+        return progressing;
+      }
+    }
+
+    if (activity === "3") {
+      if (
+        s?.levels[3].status !== "complete" ||
+        o?.levels[3].status !== "complete"
+      ) {
+        return planned;
+      }
+      if (
+        s?.levels[4].status === "complete" &&
+        o?.levels[4].status === "complete"
+      ) {
+        return complete;
+      } else {
+        return progressing;
+      }
+    }
+
+    return complete;
+  };
+
+  const getCompetencyLevelStatus = (c_id) => {
+    const levels = [
+      { name: "Assists", number: 0 },
+      { name: "Applies", number: 0 },
+      { name: "Masters", number: 0 },
+      { name: "Adapts", number: 0 },
+      { name: "Innovates", number: 0 },
+    ];
+    const people = c_id?.levels;
+
+    people?.forEach((p) => (levels[p?.level?.level - 1].number += 1));
+
+    return levels;
+  };
+
+  const getMaxCompetencyLevel = (c_id) => {
+    const levels = getCompetencyLevelStatus(c_id);
+    let max = 0;
+    levels.forEach((l, index) => {
+      if (l.number >= max) {
+        max = index;
+      }
+    });
+    console.log("max", max, c_id?.competency?.name);
+    return max;
+  };
+
+  const checkCompetency = (activity) => {
+    const complete = <p style={{ color: "green" }}>Complete</p>;
+    const incomplete = <p style={{ color: "orange" }}>Incomplete</p>;
+
+    if (activity === "0") {
+      if (
+        getMaxCompetencyLevel(c0) >= 2 &&
+        getMaxCompetencyLevel(c1) >= 2 &&
+        getMaxCompetencyLevel(c2) >= 2
+      ) {
+        return complete;
+      } else {
+        return incomplete;
+      }
+    }
+
+    if (activity === "1") {
+      if (getMaxCompetencyLevel(c0) >= 2 && getMaxCompetencyLevel(c1) >= 2) {
+        return complete;
+      } else {
+        return incomplete;
+      }
+    }
+
+    if (activity === "2" || activity === "3") {
+      if (getMaxCompetencyLevel(c0) >= 2 && getMaxCompetencyLevel(c3) >= 2) {
+        return complete;
+      } else {
+        return incomplete;
+      }
+    }
   };
 
   return (
@@ -480,9 +715,7 @@ const ActivityView = () => {
           ) : (
             <p>No input alphas</p>
           )}
-          <div className="status">
-            <p>Status</p>
-          </div>
+          <div className="status">{checkEntry(id)}</div>
         </div>
 
         <div className="subsection">
@@ -496,9 +729,7 @@ const ActivityView = () => {
             </div>
           ))}
 
-          <div className="status">
-            <p>Status</p>
-          </div>
+          <div className="status">{checkCompetency(id)}</div>
         </div>
 
         <div className="subsection">
@@ -515,9 +746,7 @@ const ActivityView = () => {
             </div>
           ))}
 
-          <div className="status">
-            <p>Status</p>
-          </div>
+          <div className="status">{checkExit(id)}</div>
         </div>
 
         <div className="subsection">
@@ -623,7 +852,7 @@ const ActivityView = () => {
                 <div className="steps">
                   {state.conditions.map((con) => (
                     <label className="main">
-                      {con.text + " " + con.id}
+                      {con.text}
                       {getConditionStatus(con.id) === "complete" ? (
                         <input
                           type="checkbox"
@@ -654,7 +883,7 @@ const ActivityView = () => {
                       ></span>
                     </label>
                   ))}
-                  {state.name === "Recognized" &&
+                  {getLevelStatus(objective.o_id, state.nr) === "complete" &&
                   active(id, objective.name, state.name) ? (
                     <h3>
                       <span>

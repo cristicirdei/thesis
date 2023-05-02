@@ -1,9 +1,11 @@
 export const stakeholderNetwork = {
   type: "product",
+  o_id: "n",
   name: "Stakeholder Network",
   states: [
     {
       name: "Stakeholder Types Described",
+      nr: 0,
       conditions: [
         {
           text: "The stakeholder types that have needs to be met are identified, including customers/users that seek value and those that",
@@ -25,6 +27,7 @@ export const stakeholderNetwork = {
     },
     {
       name: "Representatives Named",
+      nr: 1,
       conditions: [
         {
           text: "All key stakeholder types have a named point-of-contact that is empowered to represent them",
@@ -42,6 +45,7 @@ export const stakeholderNetwork = {
     },
     {
       name: "Communication Plans Outlined",
+      nr: 2,
       conditions: [
         {
           text: "For each stakeholder type it is clear how they will be represented, engaged or communicated with",
@@ -62,10 +66,12 @@ export const stakeholderNetwork = {
 
 export const productVision = {
   type: "product",
+  o_id: "v",
   name: "Product Vision",
   states: [
     {
       name: "Need Identified",
+      nr: 0,
       conditions: [
         {
           text: "A business or market need or gap has been identified",
@@ -83,6 +89,7 @@ export const productVision = {
     },
     {
       name: "Solution Envisaged",
+      nr: 1,
       conditions: [
         {
           text: "At least one solution option is described that would address the opportunity effectively",
@@ -100,6 +107,7 @@ export const productVision = {
     },
     {
       name: "Value Release Strategy Outlined",
+      nr: 2,
       conditions: [
         {
           text: "There is a release strategy in place, outlining what value releases might be made and in what order, and roughly when they are needed and might be achievable",
@@ -113,6 +121,7 @@ export const productVision = {
     },
     {
       name: "ROI Projected",
+      nr: 3,
       conditions: [
         {
           text: "The return-on-investment profile for the solution has been quantified",

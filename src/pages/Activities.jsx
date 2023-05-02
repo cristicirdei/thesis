@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
 import ActivityCard from "../components/molecules/ActivityCard";
@@ -37,6 +37,42 @@ const Activities = () => {
     endDate: null,
   });
 
+  const [o, setO] = useState();
+  const [s, setS] = useState();
+  const [v, setV] = useState();
+  const [n, setN] = useState();
+  useEffect(() => {
+    const fetchObjectiveData = async (id) => {
+      const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+      try {
+        const response = await fetch(`${BACKEND_URL}/objective/${id_p}/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          withCredentials: true,
+        });
+        const json = await response.json();
+        console.log(json);
+        id === "o"
+          ? setO(json)
+          : id === "s"
+          ? setS(json)
+          : id === "v"
+          ? setV(json)
+          : setN(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchObjectiveData("s");
+    fetchObjectiveData("o");
+    fetchObjectiveData("v");
+    fetchObjectiveData("n");
+  }, []);
+
   const handlePlanActivity = async (e) => {
     const id_p = JSON.parse(localStorage.getItem("user")).id._id;
     alert("at least i am here");
@@ -50,6 +86,56 @@ const Activities = () => {
     } catch (e) {
       alert(e);
     }
+  };
+
+  const calculatePercentage = (array) => {
+    let sum = 0;
+    array.forEach((x) => x?.status === "complete" && (sum += 1));
+    return Math.ceil((sum / array.length) * 100);
+  };
+
+  const getPercentage = (activity) => {
+    if (activity === 0) {
+      return calculatePercentage([
+        o?.levels[0],
+        o?.levels[1],
+        o?.levels[2],
+        v?.levels[0],
+        v?.levels[1],
+        v?.levels[2],
+      ]);
+    }
+
+    if (activity === 1) {
+      return calculatePercentage([
+        s?.levels[0],
+        s?.levels[1],
+        s?.levels[2],
+        n?.levels[0],
+        n?.levels[1],
+        n?.levels[2],
+      ]);
+    }
+
+    if (activity === 2) {
+      return calculatePercentage([s?.levels[4], o?.levels[4]]);
+    }
+
+    if (activity === 3) {
+      return calculatePercentage([s?.levels[5], o?.levels[5]]);
+    }
+
+    return 0;
+  };
+
+  const getCompletionStatus = (p) => {
+    let status;
+    p === 0
+      ? (status = "Planned")
+      : p === 100
+      ? (status = "Complete")
+      : (status = "Progressing");
+    return status;
   };
 
   return (
@@ -140,8 +226,8 @@ const Activities = () => {
           activitiesConstants.map((activity, i) => (
             <ActivityStatus
               name={activity.name}
-              status={activitiesTestData[i].status}
-              progress={activitiesTestData[i].progress}
+              status={getCompletionStatus(getPercentage(i))}
+              progress={getPercentage(i)}
             ></ActivityStatus>
           ))}
       </div>

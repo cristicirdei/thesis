@@ -21,7 +21,7 @@ hr {
     margin: 0;
 
     .activity-card {
-        @include bordered;
+        @include bordered-shadow;
         max-width: 15rem;
         height: fit-content;
         min-height: 263.6px;
@@ -91,7 +91,7 @@ hr {
 }
 
 .activity-plan {
-    @include bordered;
+    @include bordered-shadow;
     width: 15rem;
     height: 7rem;
     display: flex;
@@ -116,7 +116,7 @@ hr {
 }
 
 .activity-status {
-    @include bordered;
+    @include bordered-shadow;
     width: 15rem;
     height: 6rem;
     display: flex;

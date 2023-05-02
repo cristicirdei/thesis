@@ -1,10 +1,16 @@
 $themeColor: #C2C2C2;
-$themeAccent: #B1F4BF;
+$themeAccent: #b1f4bf;
 $shadowColor: rgba(193, 193, 193, 0.2);
 $shadowColor2: rgba(193, 193, 193, 0.4);
 $shadowColor3: rgba(193, 193, 193, 0.6);
 
 @mixin bordered {
+    // box-shadow: 0px 2px 10px 2px $shadowColor;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.266);
+}
+
+@mixin bordered-shadow {
     box-shadow: 0px 2px 10px 2px $shadowColor;
     border-radius: 10px;
     border: 1px solid rgba(128, 128, 128, 0.168);

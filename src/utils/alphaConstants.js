@@ -1,9 +1,11 @@
 export const opportunity = {
   type: "alpha",
+  o_id: "o",
   name: "Opportunity",
   states: [
     {
       name: "Identified",
+      nr: 0,
       conditions: [
         { text: "Idea behind opportunity identified", id: "o_1_1" },
         { text: "At least one investing stakeholder interested", id: "o_1_2" },
@@ -12,6 +14,7 @@ export const opportunity = {
     },
     {
       name: "Solution Needed",
+      nr: 1,
       conditions: [
         { text: "Solution identified", id: "o_2_1" },
         { text: "Stakeholders' needs established", id: "o_2_2" },
@@ -22,6 +25,7 @@ export const opportunity = {
     },
     {
       name: "Value Established",
+      nr: 2,
       conditions: [
         { text: "Opportunity value quantified", id: "o_3_1" },
         { text: "Solution impact understood", id: "o_3_2" },
@@ -32,6 +36,7 @@ export const opportunity = {
     },
     {
       name: "Viable",
+      nr: 3,
       conditions: [
         { text: "Solution outlined", id: "o_4_1" },
         { text: "Solution possible within constraints", id: "o_4_2" },
@@ -43,6 +48,7 @@ export const opportunity = {
     },
     {
       name: "Addressed",
+      nr: 4,
       conditions: [
         { text: "Opportunity addressed", id: "o_5_1" },
         { text: "Solution worth deploying", id: "o_5_2" },
@@ -51,6 +57,7 @@ export const opportunity = {
     },
     {
       name: "Benefit Accrued",
+      nr: 5,
       conditions: [
         { text: "Solution accrues benefits", id: "o_6_1" },
         { text: "ROI acceptable", id: "o_6_2" },
@@ -61,10 +68,12 @@ export const opportunity = {
 
 export const stakeholders = {
   type: "alpha",
+  o_id: "s",
   name: "Stakeholders",
   states: [
     {
       name: "Recognized",
+      nr: 0,
       conditions: [
         { text: "Stakeholder groups identified", id: "s_1_1" },
         { text: "Key stakeholder groups represented", id: "s_1_2" },
@@ -73,6 +82,7 @@ export const stakeholders = {
     },
     {
       name: "Represented",
+      nr: 1,
       conditions: [
         { text: "Responsibilities agreed", id: "s_2_1" },
         { text: "Representatives authorized", id: "s_2_2" },
@@ -82,6 +92,7 @@ export const stakeholders = {
     },
     {
       name: "Involved",
+      nr: 2,
       conditions: [
         { text: "Representatives assist the team", id: "s_3_1" },
         { text: "Timely feedback and decisions provided", id: "s_3_2" },
@@ -90,6 +101,7 @@ export const stakeholders = {
     },
     {
       name: "In Agreement",
+      nr: 3,
       conditions: [
         { text: "Minimal expectations agreed", id: "s_4_1" },
         { text: "Rep's happy with their involvement", id: "s_4_2" },
@@ -100,6 +112,7 @@ export const stakeholders = {
     },
     {
       name: "Satisfied for Deployment",
+      nr: 4,
       conditions: [
         { text: "Stakeholder feedback provided", id: "s_5_1" },
         { text: "System ready for deployment", id: "s_5_2" },
@@ -107,6 +120,7 @@ export const stakeholders = {
     },
     {
       name: "Satisfied in Use",
+      nr: 5,
       conditions: [
         { text: "Feedback on system use available", id: "s_6_1" },
         { text: "System meets expectations", id: "s_6_2" },

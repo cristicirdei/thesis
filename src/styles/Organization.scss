@@ -26,6 +26,126 @@
                 font-weight: bold
             }
         }
+
+        .table-competency:last-of-type,
+        .table-alpha:last-of-type {
+            border-bottom: none;
+        }
+
+        .table-competency {
+            table-layout: fixed;
+            margin: 0.3rem 0;
+            width: 90%;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.212);
+
+            tr {
+                border: 1px solid;
+
+                td {
+                    width: 16.66%;
+                    padding: 0.2rem 0;
+                    text-align: center;
+
+                    color: $themeColor;
+
+                    h3 {
+                        margin-bottom: 0.5rem;
+                        color: #000;
+                    }
+
+                    p {
+                        color: #000;
+                        font-size: small;
+                    }
+
+                    div {
+                        margin: 0 auto;
+                        background-color: rgb(194, 194, 194);
+                        border-radius: 5px;
+                        width: 40%;
+                        height: 1px;
+                    }
+
+                }
+
+                .people {
+                    border-top: 1px solid;
+                }
+
+                .green {
+                    color: #4CD95E;
+                }
+
+                .yellow {
+                    color: #F1F426;
+                }
+            }
+        }
+
+        .table-alpha {
+            table-layout: fixed;
+            margin: 0.3rem 0;
+            width: 90%;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.212);
+
+            tr {
+                border: 1px solid;
+
+                td {
+                    width: 14.28%;
+                    padding: 0.2rem 0;
+                    text-align: center;
+
+                    color: $themeColor;
+
+                    h3 {
+                        margin-bottom: 0.5rem;
+                        color: #000;
+                    }
+
+                    h4 {
+                        color: #000;
+                    }
+
+                    p {
+                        color: #000;
+                        font-size: small;
+                    }
+
+                    div {
+                        margin: 0 auto;
+                        background-color: rgb(194, 194, 194);
+                        border-radius: 5px;
+                        width: 40%;
+                        height: 1px;
+                    }
+
+                }
+
+                .people {
+                    border-top: 1px solid;
+                }
+
+                .green {
+                    width: 60%;
+                    height: 1rem;
+                    background-color: #4CD95E;
+                }
+
+                .yellow {
+                    width: 60%;
+                    height: 1rem;
+                    background-color: #F1F426;
+                }
+
+                .gray {
+                    width: 60%;
+                    height: 1rem;
+                    background-color: rgb(194, 194, 194);
+                }
+            }
+        }
+
     }
 }
 
@@ -36,7 +156,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    background-color: #fff;
+    //background-color: #fff;
 
     .details {
         display: flex;
@@ -67,7 +187,7 @@
     display: flex;
     flex-direction: column;
     padding: 0.5rem;
-    background-color: #fff;
+    //background-color: #fff;
 
     .details {
         display: flex;
@@ -109,4 +229,13 @@
     flex-direction: row;
     gap: 1rem;
     justify-content: stretch;
+}
+
+.section-title {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.no-top-margin {
+    margin-top: 0;
 }
