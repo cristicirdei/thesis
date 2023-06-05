@@ -31,7 +31,7 @@ const Organization = () => {
           withCredentials: true,
         });
         const json = await response.json();
-        console.log(json);
+
         setData(json[0]);
       } catch (error) {
         console.log("error", error);
@@ -58,7 +58,7 @@ const Organization = () => {
           }
         );
         const json = await response.json();
-        console.log(json);
+
         id === 0
           ? setC0(json)
           : id === 1
@@ -90,7 +90,7 @@ const Organization = () => {
           withCredentials: true,
         });
         const json = await response.json();
-        console.log(json);
+
         id === "o"
           ? setO(json)
           : id === "s"
@@ -134,6 +134,7 @@ const Organization = () => {
 
   const getLevelStatus = (c_id) => {
     const levels = [
+      { name: "Undefined", number: 0 },
       { name: "Assists", number: 0 },
       { name: "Applies", number: 0 },
       { name: "Masters", number: 0 },
@@ -143,23 +144,28 @@ const Organization = () => {
     const people = c_id?.levels;
 
     people?.forEach((p) => {
-      levels[p?.level?.level - 1].number += 1;
+      levels[p?.level?.level].number += 1;
     });
 
-    console.log(c_id?.competency?.name, levels);
-    return levels;
+    return levels.slice(1);
   };
 
   const getMaxLevelStatus = (c_id) => {
     const levels = getLevelStatus(c_id);
+
     let max = 0;
+    let lev = 0;
     levels.forEach((l, index) => {
       if (l.number >= max) {
-        max = index;
+        max = l.number;
+        lev = index;
       }
     });
-    
-    return max;
+
+    if (max === 0) {
+      return -1;
+    }
+    return lev;
   };
 
   const competenecyLevels = [
@@ -474,17 +480,23 @@ const Organization = () => {
               </td>
               <td>
                 <div className="gray">
-                  <p>No Status</p>
+                  <p style={{ fontSize: "0.7rem", padding: "0.1rem" }}>
+                    No Status
+                  </p>
                 </div>
               </td>
               <td>
                 <div className="yellow">
-                  <p>Incomplete</p>
+                  <p style={{ fontSize: "0.7rem", padding: "0.1rem" }}>
+                    Incomplete
+                  </p>
                 </div>
               </td>
               <td>
                 <div className="green">
-                  <p>Complete</p>
+                  <p style={{ fontSize: "0.7rem", padding: "0.1rem" }}>
+                    Complete
+                  </p>
                 </div>
               </td>
               <td></td>

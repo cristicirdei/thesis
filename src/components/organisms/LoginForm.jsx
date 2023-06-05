@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import Input from "../molecules/Input";
 import { useNavigate } from "react-router-dom";
 
@@ -24,14 +24,46 @@ function parseJwt(token) {
 const LoginForm = () => {
   let navigate = useNavigate();
 
-  const [data, setData] = useState({
-    email: null,
-    password: null,
-  });
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  const [data, setData] = useReducer(
+    (prev, next) => {
+      const newEvent = { ...prev, ...next };
+
+      if (!validateEmail(newEvent.email)) {
+        newEvent.emailError = "Invalid email";
+      } else {
+        newEvent.emailError = "";
+        newEvent.emailValid = true;
+      }
+
+      if (newEvent.password.length) {
+        newEvent.passwordError = " ";
+        newEvent.passwordValid = true;
+      } else {
+        newEvent.passwordError = "Enter password";
+      }
+
+      return newEvent;
+    },
+    {
+      email: "",
+      password: "",
+      emailError: "",
+      passwordError: "",
+      emailValid: false,
+      passwordValid: false,
+    }
+  );
 
   const request = async (e) => {
     e.preventDefault();
-    console.log(data);
 
     try {
       const res = await axios.post(`${BACKEND_URL}/user/login`, {
@@ -53,21 +85,26 @@ const LoginForm = () => {
           auth: true,
           role: decoded.role,
           name: decoded.name,
+          project: decoded.project,
         };
         localStorage.setItem("user", JSON.stringify(user));
-        console.log("user", user);
-
-        if (decoded.exp * 1000 < new Date().getTime()) {
-          localStorage.clear();
-        } else {
-        }
       }
     } catch (e) {
       alert(e);
     }
 
-    navigate("/organization");
+    const hasProject = JSON.parse(window.localStorage.getItem("user")).project;
+
+    if (hasProject) {
+      navigate("/organization");
+    } else {
+      navigate("/project");
+    }
     window.location.reload(false);
+  };
+
+  const submitable = () => {
+    return !data.emailValid || !data.passwordValid;
   };
 
   return (
@@ -76,30 +113,35 @@ const LoginForm = () => {
         <h2>Login</h2>
 
         <Input
+          value={data.email}
           type="text"
           name="User"
           placeholder="Enter the user email"
-          onChange={(e) =>
+          onChange1={(e) =>
             setData((prevState) => ({
               ...prevState,
               email: e.target.value,
             }))
           }
+          onChange={(e) => setData({ email: e.target.value })}
         ></Input>
+        <p className="error">{data.emailError}</p>
 
         <Input
+          value={data.password}
           type="password"
           name="Password"
           placeholder="Enter the password"
-          onChange={(e) =>
+          onChange1={(e) =>
             setData((prevState) => ({
               ...prevState,
               password: e.target.value,
             }))
           }
+          onChange={(e) => setData({ password: e.target.value })}
         ></Input>
 
-        <input type="submit" value="Login"></input>
+        <input disabled={submitable()} type="submit" value="Login"></input>
       </div>
     </form>
   );

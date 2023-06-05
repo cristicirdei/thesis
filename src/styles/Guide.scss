@@ -55,3 +55,54 @@
 .img-span {
     height: 1.5rem;
 }
+
+
+.guide-step {
+    gap: 1.5rem;
+    margin: 1rem;
+    color: rgb(55, 55, 55);
+
+}
+
+.how-to-container {
+    display: flex;
+    flex-direction: column;
+    //align-items: stretch;
+    //justify-content: space-around;
+    //flex-flow: row;
+    gap: 0.5rem;
+    margin: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    h2 {
+        margin-top: 2rem;
+    }
+}
+
+.how-to-mini-container {
+    display: flex;
+    flex-direction: row;
+    // align-items: stretch;
+    justify-content: space-around;
+    flex-flow: row;
+    gap: 2.5rem;
+    margin-top: 1rem;
+
+}
+
+.p {
+    //background-color: purple;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.g {
+    background-color: green;
+}
+
+.o {
+    background-color: orange;
+}

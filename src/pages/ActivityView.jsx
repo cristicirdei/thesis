@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "react-modal";
 
@@ -72,7 +72,7 @@ const ActivityView = () => {
 
   const [note, setNote] = useState({ title: null, body: null });
   const [openedNote, setOpenedNote] = useState();
-  const [task, setTask] = useState({ title: null, body: null, deadline: null });
+
   const [openedTask, setOpenedTask] = useState();
   const [data, setData] = useState();
   const [objectivesStatus, setObjectivesStatus] = useState();
@@ -84,6 +84,47 @@ const ActivityView = () => {
   const [c1, setC1] = useState([]);
   const [c2, setC2] = useState([]);
   const [c3, setC3] = useState([]);
+  const [changes, setChanges] = useState();
+
+  const [task, setTask] = useReducer(
+    (prev, next) => {
+      const newEvent = { ...prev, ...next };
+
+      if (newEvent.title.length === 0 || newEvent.body.length === 0) {
+        newEvent.contentError = "Add content to the task";
+      } else {
+        newEvent.contentError = "";
+        newEvent.contentValid = true;
+      }
+
+      if (newEvent.deadline === null) {
+        newEvent.deadlineError = "Date required";
+      } else {
+        let date1 = new Date(newEvent.deadline).getTime();
+        let now = new Date().getTime();
+        if (date1 < now) {
+          newEvent.deadlineError = "Invalid date";
+        } else {
+          newEvent.deadlineError = "";
+          newEvent.deadlineValid = true;
+        }
+      }
+      return newEvent;
+    },
+    {
+      title: "",
+      body: "",
+      deadline: null,
+      contentError: "",
+      contentValid: false,
+      deadlineError: "",
+      deadlineValid: false,
+    }
+  );
+
+  const submitable = () => {
+    return !task.deadlineValid || !task.contentValid;
+  };
 
   const handleAddNote = async (e) => {
     const id_p = JSON.parse(localStorage.getItem("user")).id._id;
@@ -103,21 +144,31 @@ const ActivityView = () => {
   };
 
   const handleAddTask = async (e) => {
+    if (submitable()) {
+      e.preventDefault();
+    }
+
     const id_p = JSON.parse(localStorage.getItem("user")).id._id;
-    try {
-      const res = await axios.post(
-        `${BACKEND_URL}/activity/task/${id_p}/${id}`,
-        {
-          title: task.title,
-          body: task.body,
-          deadline: task.deadline,
-        }
-      );
-      console.log("res ", res);
-    } catch (e) {
-      alert(e);
+
+    setShowErr(true);
+    if (!submitable()) {
+      try {
+        const res = await axios.post(
+          `${BACKEND_URL}/activity/task/${id_p}/${id}`,
+          {
+            title: task.title,
+            body: task.body,
+            deadline: task.deadline,
+          }
+        );
+        console.log("res ", res);
+      } catch (e) {
+        alert(e);
+      }
     }
   };
+
+  const [showErr, setShowErr] = useState(false);
 
   useEffect(() => {
     setHeight(ref.current.clientHeight);
@@ -126,6 +177,7 @@ const ActivityView = () => {
   useEffect(() => {
     const fetchActivityData = async () => {
       const id_p = JSON.parse(localStorage.getItem("user")).id._id;
+      console.log(id_p, id);
       try {
         const response = await fetch(`${BACKEND_URL}/activity/${id_p}/${id}`, {
           headers: {
@@ -199,7 +251,7 @@ const ActivityView = () => {
           }
         );
         const json = await response.json();
-        console.log(json);
+        // console.log(json);
         id === 0
           ? setC0(json)
           : id === 1
@@ -217,6 +269,8 @@ const ActivityView = () => {
     fetchCompetencyData(2);
     fetchCompetencyData(3);
   }, []);
+
+  useEffect(() => {}, [changes]);
 
   const handleTaskComplete = async (e) => {
     // e.target.checked = true;
@@ -315,6 +369,7 @@ const ActivityView = () => {
         `${BACKEND_URL}/objective/${id_p}/${change}`
       );
       console.log("res ", res.data);
+      setChanges(res.data);
     } catch (e) {
       alert(e);
     }
@@ -400,9 +455,10 @@ const ActivityView = () => {
       ) {
         return planned;
       }
+
       if (
         s?.levels[2].status === "complete" &&
-        n?.levels[2].status === "complete"
+        n?.levels[1].status === "complete"
       ) {
         return complete;
       } else {
@@ -413,7 +469,7 @@ const ActivityView = () => {
     if (activity === "2") {
       if (
         s?.levels[2].status !== "complete" ||
-        n?.levels[2].status !== "complete"
+        n?.levels[1].status !== "complete"
       ) {
         return planned;
       }
@@ -449,6 +505,7 @@ const ActivityView = () => {
 
   const getCompetencyLevelStatus = (c_id) => {
     const levels = [
+      { name: "Undefined", number: 0 },
       { name: "Assists", number: 0 },
       { name: "Applies", number: 0 },
       { name: "Masters", number: 0 },
@@ -457,9 +514,9 @@ const ActivityView = () => {
     ];
     const people = c_id?.levels;
 
-    people?.forEach((p) => (levels[p?.level?.level - 1].number += 1));
+    people?.forEach((p) => (levels[p?.level?.level].number += 1));
 
-    return levels;
+    return levels.slice(1);
   };
 
   const getMaxCompetencyLevel = (c_id) => {
@@ -470,7 +527,7 @@ const ActivityView = () => {
         max = index;
       }
     });
-    console.log("max", max, c_id?.competency?.name);
+    // console.log("max", max, c_id?.competency?.name);
     return max;
   };
 
@@ -623,7 +680,7 @@ const ActivityView = () => {
             ></textarea>
             <br></br>
             <br></br>
-            <h3>Or Add a Document</h3>
+            {/*<h3>Or Add a Document</--h3>
             <br></br>
             <input
               type="file"
@@ -631,7 +688,7 @@ const ActivityView = () => {
               className="input-modal"
               accept=".pdf"
               onChange
-            ></input>
+            ></input>*/}
 
             <br></br>
             <input type="submit" className="save" value="Save"></input>
@@ -645,12 +702,7 @@ const ActivityView = () => {
               name="Title"
               placeholder="Task title"
               className="input-modal"
-              onChange={(e) =>
-                setTask((previousState) => ({
-                  ...previousState,
-                  title: e.target.value,
-                }))
-              }
+              onChange={(e) => setTask({ title: e.target.value })}
             ></input>
             <p style={{ fontSize: "small", color: "gray" }}>Deadline</p>
             <input
@@ -659,26 +711,25 @@ const ActivityView = () => {
               placeholder="Deadline"
               className="input-modal"
               style={{ width: "fit-content" }}
-              onChange={(e) =>
-                setTask((previousState) => ({
-                  ...previousState,
-                  deadline: e.target.value,
-                }))
-              }
+              onChange={(e) => setTask({ deadline: e.target.value })}
             ></input>
+            <p className="error">
+              {" "}
+              {showErr ? (!task.deadlineValid ? task.deadlineError : "") : ""}
+            </p>
+
             <textarea
               rows="7"
               cols="50"
               name="About task"
               placeholder="Task details"
               className="input-modal"
-              onChange={(e) =>
-                setTask((previousState) => ({
-                  ...previousState,
-                  body: e.target.value,
-                }))
-              }
+              onChange={(e) => setTask({ body: e.target.value })}
             ></textarea>
+            <p className="error">
+              {" "}
+              {showErr ? (!task.contentValid ? task.contentError : "") : ""}
+            </p>
 
             <br></br>
             <input type="submit" className="save" value="Save"></input>

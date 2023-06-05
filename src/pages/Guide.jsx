@@ -48,7 +48,7 @@ const Guide = () => {
         </a>
 
         <Link
-          to={"/guide"}
+          to={"/howto"}
           className="guide-tile"
           style={{ color: "inherit", textDecoration: "none" }}
         >

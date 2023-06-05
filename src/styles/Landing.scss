@@ -1,0 +1,43 @@
+@import "Master";
+
+.start {
+    border-radius: 10px;
+    height: 3.5rem;
+    width: 15rem;
+
+
+    margin-right: 1rem;
+    margin-top: 5.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    gap: 1rem;
+    background-color: #000;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
+.start a {
+    border-radius: 10px;
+
+
+    text-decoration: none;
+    color: #fff;
+
+    font-weight: 400;
+    padding: 0.5rem 0.5rem;
+
+}
+
+.start:hover {
+    border-radius: 10px;
+
+    background-color: $themeAccent;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s all;
+    box-shadow: 0px 2px 10px 5px rgba(177, 244, 191, 0.7);
+
+}
