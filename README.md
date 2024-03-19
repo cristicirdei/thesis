@@ -1,3 +1,20 @@
+# 2023 Thesis App: Product Ownership Essentials Wizard
+My Bachelor's in Computer Science' Final Thesis
+
+## App Screenshots
+![landing screen](/Screenshots/landing.png)
+![signup screen](/Screenshots/signup.png)
+![login screen](/Screenshots/login.png)
+![create project screen](/Screenshots/create-project0.png)
+![guide screen](/Screenshots/guide.png)
+![activities screen](/Screenshots/activities0.png)
+![view activity screen](/Screenshots/view-activity0.png)
+![competencies screen](/Screenshots/competencies.png)
+![view competency screen](/Screenshots/competency-view0.png)
+![organization screen](/Screenshots/organization0.png)
+![pop-ups](/Screenshots/pop-ups.png)
+________________________
+
 # Getting Started with Create React App and Redux
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
