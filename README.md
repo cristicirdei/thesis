@@ -1,5 +1,5 @@
 # 2023 Thesis App: Product Ownership Essentials Wizard
-My Bachelor's in Computer Science' Final Thesis
+An app I created as my Thesis for my Bachelor's Degree in Computer Science 
 
 ## App Screenshots
 ![landing screen](/Screenshots/landing.png)
